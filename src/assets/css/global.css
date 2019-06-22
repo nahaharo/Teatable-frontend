@@ -1,0 +1,43 @@
+.scroll-box {
+    overflow: auto;
+    -ms-overflow-style: none;
+    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-box > table {
+    width: 100%;
+}
+
+.scroll-box thead > tr {
+    height: 5rem;
+}
+
+.scroll-box thead th {
+    background: white;
+    position: sticky;
+    top: 0;
+    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-box::-webkit-scrollbar {width: 0!important}
+
+.scroll-box > div {
+    position: relative
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.text-overflow {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.table-head {
+    height: 5rem;
+    border-bottom:2px solid rgba(0, 0, 0, 0.5);
+}
