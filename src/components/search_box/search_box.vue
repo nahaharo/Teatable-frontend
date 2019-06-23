@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div class="search-input"><input v-model="searchquery" placeholder="검색하세요!" @change="search"></div>
         <div class="scroll-box search-box">
             <table class="mx-auto">
                 <thead>
@@ -13,11 +14,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="subject_row" draggable="true" @dragstart="dragstart" v-for="(sub, index) in subs" :key="index" :id="'sub'+sub['No']">
+                    <tr class="subject_row" draggable="true" @dragstart="dragstart" v-for="(sub, index) in showlist" :key="index" :subcode="sub['과목번호']" :num="sub['분반']">
                         <td class="subject_name">{{sub.교과목명}}</td>
-                        <td class="subject_num">{{sub.분반}}</td>
+                        <td class="subject_num">{{sub.분반 + 1}}</td>
                         <td class="subject_code">{{sub.과목번호}}</td>
-                        <td class="subject_time">{{sub['요일/교시/강의실']}}</td>
+                        <td class="subject_time">{{time_loc_string(sub.시간, sub.강의실)}}</td>
                         <td class="subject_prof">
                             <div class="text-overflow">
                                 {{sub.담당교수}}
@@ -34,21 +35,66 @@
 <script>
 import { store } from '../../vuex/subject_store/subject_store'
 import dragstart from '../../tools/dragstart'
+// eslint-disable-next-line
+import { time2int, int2time, time_loc_string } from '../../tools/time'
 
 export default {
-
-    data() {return {subs: this.$store.getters.get_subs};},
+    store,
+    data() {
+        return { subs: this.$store.getters.get_subs, list_subs: [], showlist: [] };
+        },
     mounted() {
-        this.$store.dispatch("init_subs");
+        this.$store.dispatch("init_subs").then(
+            ()=>{
+                this.load_list();
+                this.showlist = this.list_subs;
+                }
+            );
     },
     methods: {
         dragstart,
+        load_list() {
+            for(let sub_code in this.subs)
+            {
+                for(let sub of this.subs[sub_code])
+                {   
+                    this.list_subs.push(sub);
+                }
+            }
+        },
+        search() {
+            let re = new RegExp(this.searchquery);//make re for fast search
+            let sub_keys = ["과목번호", "교과목명", "담당교수"];
+            let ans = [];
+            this.list_subs.map(function (sub) {
+                for (let key of sub_keys) {
+                    if (re.exec(sub[key]) !== null) { //if re match
+                        ans.push(sub);
+                        break;
+                    }
+                }
+            });
+            if (ans.length !== 0) {
+                this.showlist = ans;
+            } else {
+                alert("검색결과가 없습니다.");
+            }
+        },
+        time_loc_string
     },
-    store,
+
 }
 </script>
 
 <style scoped>
+.search-input {
+    text-align:center;
+}
+.search-input > input {
+    width: 50%;
+    text-align: center;
+}
+
 .search-box {
     height: 400px;
 }
@@ -90,9 +136,6 @@ export default {
 }
 
 @media (max-width: 550px) {
-    .subject_code {
-       display: none;
-    }
     .subject_name {
         width: 160px;
     }
@@ -105,9 +148,12 @@ export default {
     .subject_name {
         width: 200px;
     }
+    .subject_code {
+       display: none;
+    }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
     .subject_credit {
        display: none;
     }

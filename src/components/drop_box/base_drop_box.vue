@@ -11,7 +11,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="subject_row" draggable="true" @dragstart="dragstart" @dragend="dragend" v-for="(sub, index) in subs" :key="index" :id="'sub'+sub['No']">
+                    <tr class="subject_row" draggable="true" @dragstart="dragstart" @dragend="dragend" v-for="(sub, index) in subs" :key="index" :subcode="sub['과목번호']" :num="sub['분반']">
                         <td class="subject_code">{{sub.과목번호}}</td>
                         <td v-if="type_subs==='fix_subs'" class="subject_num">{{sub.분반}}</td>
                         <td class="subject_name">{{sub.교과목명}}</td>
@@ -33,16 +33,18 @@ export default {
     methods: {
         ondrop(ev) {
             ev.preventDefault();
-            let sub_No = Number(ev.dataTransfer.getData("text").slice(3));
-            this.$store.commit('addsubject', {type: this.type_subs, sub_No: sub_No});
+            let code = ev.dataTransfer.getData("text/code");
+            let num = ev.dataTransfer.getData("text/num");
+            this.$store.commit('addsubject', {type: this.type_subs, code: code, num: num});
         },
         allowDrop(ev) {
             ev.preventDefault();
         },
         dragstart,
         dragend(ev) {
-            let sub_No = Number(ev.target.id.slice(3));
-            this.$store.commit('delsubject', {type: this.type_subs, sub_No: sub_No});
+            let code = ev.target.subcode;
+            let num = ev.target.num;
+            this.$store.commit('delsubject', {type: this.type_subs, code: code, num: num});
         }
     },
     props: {type_subs: String, box_name: String},
