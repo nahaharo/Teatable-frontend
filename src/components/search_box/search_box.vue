@@ -40,8 +40,13 @@ import { time2int, int2time, time_loc_string } from '../../tools/time'
 
 export default {
     store,
+    computed: {
+        subs () {
+            return this.$store.getters.get_subs;
+        }
+    },
     data() {
-        return { subs: this.$store.getters.get_subs, list_subs: [], showlist: [] };
+        return { list_subs: [], showlist: [], searchquery: ""};
         },
     mounted() {
         this.$store.dispatch("init_subs").then(
@@ -49,7 +54,10 @@ export default {
                 this.load_list();
                 this.showlist = this.list_subs;
                 }
-            );
+            ).catch(err => {
+                // eslint-disable-next-line
+                console.log(err);
+            });
     },
     methods: {
         dragstart,
@@ -129,7 +137,7 @@ export default {
     width: 50px;
 }
 
-@media (max-width: 430px) {
+@media (max-width: 483px) {
     .subject_time {
         display: none;
     }
@@ -141,19 +149,23 @@ export default {
     }
 }
 
-@media (max-width: 770px) {
-    .subject_prof {
-       display: none;
-    }
+@media (max-width: 768px) {
     .subject_name {
         width: 200px;
+    }
+
+}
+
+@media (max-width: 992px) {
+    .subject_prof {
+       display: none;
     }
     .subject_code {
        display: none;
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .subject_credit {
        display: none;
     }

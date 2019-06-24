@@ -27,14 +27,19 @@ import { store } from '../../vuex/subject_store/subject_store'
 import dragstart from '../../tools/dragstart'
 
 export default {
-    data() {
-        return {subs: this.$store.getters.get_typed_subs(this.type_subs)};
+    computed: {
+        subs () {
+            return this.$store.getters.get_typed_subs(this.type_subs);
+        }
     },
+    // data() {
+    //     return {subs: this.$store.getters.get_typed_subs(this.type_subs)};
+    // },
     methods: {
         ondrop(ev) {
             ev.preventDefault();
             let code = ev.dataTransfer.getData("text/code");
-            let num = ev.dataTransfer.getData("text/num");
+            let num = Number(ev.dataTransfer.getData("text/num"));
             this.$store.commit('addsubject', {type: this.type_subs, code: code, num: num});
         },
         allowDrop(ev) {
