@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 class="text-center" style="margin:40px;">TeaTable</h1>
     <div class="container col-centered">
       <div lass="col-lg-12 my-3">
         <searchbox></searchbox>
@@ -29,7 +28,6 @@
         </div>
       </div>
     </div>
-    <p class="text-center" style="margin:10px;">Copyright(c)2019 Hyunwook Ha All rights reserved.</p>
   </div>
 </template>
 
@@ -41,12 +39,14 @@ import searchbox from "../components/search_box/search_box"
 import reset from "../components/controll_button/reset_button"
 import submit from "../components/controll_button/submit_button"
 
+
+
 export default {
     components: {
         basebox,
         searchbox,
         reset,
-        submit
+        submit,
     }
 }
 </script>

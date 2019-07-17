@@ -3,8 +3,6 @@
 </template>
 
 <script>
-import { store } from '../../vuex/subject_store/subject_store'
-
 export default {
     computed: {
         fix_subs() {return this.$store.getters.get_typed_subs("fix_subs");},
@@ -14,9 +12,9 @@ export default {
     methods: {
         submit() {
             this.$store.commit("submit");
+            this.$router.push("/table");
         }
     },
-    store,
 }
 </script>
 

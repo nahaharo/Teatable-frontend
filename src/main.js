@@ -7,6 +7,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import App from './App.vue'
+import store from './vuex/subject_store'
+import router from './router'
 
 import './assets/css/global.css'
 
@@ -16,5 +18,7 @@ Vue.use(VueRouter)
 Vue.prototype.$http = axios
 
 new Vue({
-  render: h => h(App)
+  render: h => h(App),
+  router,
+  store,
 }).$mount('#app')

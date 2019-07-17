@@ -1,13 +1,21 @@
 <template>
-  <router-view>
-  </router-view>
+  <div>
+    <pageheader></pageheader>
+    <router-view>
+    </router-view>
+    <pagefooter></pagefooter>
+  </div>
 </template>
 
 <script>
-import router from './router'
+import pageheader from "./components/deco/header"
+import pagefooter from "./components/deco/footer"
 
 export default {
-	router
+  components: {
+        pageheader,
+        pagefooter
+  }
 }
 </script>
 

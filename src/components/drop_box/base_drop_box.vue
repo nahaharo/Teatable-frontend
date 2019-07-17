@@ -13,17 +13,17 @@
                 <tbody>
                     <tr class="subject_row" draggable="true" @dragstart="dragstart" @dragend="dragend" v-for="(sub, index) in subs" :key="index" :subcode="sub['과목번호']" :num="sub['분반']">
                         <td class="subject_code">{{sub.과목번호}}</td>
-                        <td v-if="type_subs==='fix_subs'" class="subject_num">{{sub.분반}}</td>
+                        <td v-if="type_subs==='fix_subs'" class="subject_num">{{sub.분반 + 1}}</td>
                         <td class="subject_name">{{sub.교과목명}}</td>
                     </tr>
                 </tbody>
             </table>
+            <div class="Drag-here" v-if="subs.length===0" z-index="100" >Drag here!</div>
         </div>
     </div>
 </template>
 
 <script>
-import { store } from '../../vuex/subject_store/subject_store'
 import dragstart from '../../tools/dragstart'
 
 export default {
@@ -32,9 +32,6 @@ export default {
             return this.$store.getters.get_typed_subs(this.type_subs);
         }
     },
-    // data() {
-    //     return {subs: this.$store.getters.get_typed_subs(this.type_subs)};
-    // },
     methods: {
         ondrop(ev) {
             ev.preventDefault();
@@ -47,13 +44,12 @@ export default {
         },
         dragstart,
         dragend(ev) {
-            let code = ev.target.subcode;
-            let num = ev.target.num;
+            let code = ev.currentTarget.getAttribute('subcode');
+            let num = Number(ev.currentTarget.getAttribute('num'));
             this.$store.commit('delsubject', {type: this.type_subs, code: code, num: num});
         }
     },
     props: {type_subs: String, box_name: String},
-    store,
 }
 </script>
 
@@ -84,6 +80,14 @@ export default {
 
 .subject_name {
    width: 350px;
+}
+
+.Drag-here {
+    position: relative;
+    top: 90px;
+    text-align: center;
+    font-size: 20px;
+    color: grey;
 }
 
 </style>

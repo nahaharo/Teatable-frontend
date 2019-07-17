@@ -33,25 +33,22 @@
 </template>
 
 <script>
-import { store } from '../../vuex/subject_store/subject_store'
 import dragstart from '../../tools/dragstart'
 // eslint-disable-next-line
 import { time2int, int2time, time_loc_string } from '../../tools/time'
 
 export default {
-    store,
     computed: {
         subs () {
             return this.$store.getters.get_subs;
+        },
+        list_subs(){
+            return this.$store.getters.get_subs_list;
         }
     },
-    data() {
-        return { list_subs: [], showlist: [], searchquery: ""};
-        },
-    mounted() {
+    created() {
         this.$store.dispatch("init_subs").then(
             ()=>{
-                this.load_list();
                 this.showlist = this.list_subs;
                 }
             ).catch(err => {
@@ -59,17 +56,11 @@ export default {
                 console.log(err);
             });
     },
+    data() {
+        return { showlist: [], searchquery: ""};
+        },
     methods: {
         dragstart,
-        load_list() {
-            for(let sub_code in this.subs)
-            {
-                for(let sub of this.subs[sub_code])
-                {   
-                    this.list_subs.push(sub);
-                }
-            }
-        },
         search() {
             let re = new RegExp(this.searchquery);//make re for fast search
             let sub_keys = ["과목번호", "교과목명", "담당교수"];
@@ -90,7 +81,6 @@ export default {
         },
         time_loc_string
     },
-
 }
 </script>
 

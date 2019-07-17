@@ -2,33 +2,38 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
+import router from '../router'
+
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({
-    state : {
-        subs: {},
-        fix_subs: [],
-        req_subs: (sessionStorage.req_subs ? JSON.stringify(sessionStorage.req_subs) : []),
-        sel_subs: (sessionStorage.sel_subs ? JSON.stringify(sessionStorage.sel_subs) : []),
-    },
+export default new Vuex.Store({
     actions: {
         init_subs: context => {
-            axios.get("http://127.0.0.1:5000/").then(res => {
-                let head = res.data["head"];
-                let body = res.data["body"];
+            let ss = sessionStorage;
+            
+            if (ss.fix_subs && ss.req_subs && ss.sel_subs)
+            {
+                context.commit("settypedsubs", {type: "fix_subs", subs: JSON.parse(ss.getItem("fix_subs"))});
+                context.commit("settypedsubs", {type: "req_subs", subs: JSON.parse(ss.getItem("req_subs"))});
+                context.commit("settypedsubs", {type: "sel_subs", subs: JSON.parse(ss.getItem("sel_subs"))});
+            }
+            
+            if(ss.getItem("subs"))
+            {
+                let ans = JSON.parse(ss.getItem("subs"));
+                context.commit("setsubs", {subs: ans});
+            }
+            else
+            {
+                axios.get("/response.json").then(res => {//http://127.0.0.1:5000/
+                    let head = res.data["head"];
+                    let body = res.data["body"];
+                    
+                    let data = {};
 
-                let ss = sessionStorage;
-
-                let ans = {};
-                if(ss.getItem("subs"))
-                {
-                    ans = JSON.parse(ss.getItem("subs")) ;
-                }
-                else
-                {
                     for(let sub_code in body)
                     {
-                        ans[sub_code] = [];
+                        data[sub_code] = [];
                         for(let sub_array of body[sub_code])
                         {   
                             let sub = {};
@@ -36,31 +41,32 @@ export const store = new Vuex.Store({
                             {
                                 sub[head[i]] = sub_array[i];
                             }
-                            ans[sub_code].push(sub);
+                            data[sub_code].push(sub);
                         }
                     }
-                    ss.setItem("subs", JSON.stringify(ans));
-                }
-
-                context.commit("setsubs", {subs: ans});
-                
-                if (ss.fix_subs && ss.req_subs && ss.sel_subs)
-                {
-                    context.commit("settypedsubs", {type: "fix_subs", subs: JSON.parse(ss.getItem("fix_subs"))});
-                    context.commit("settypedsubs", {type: "req_subs", subs: JSON.parse(ss.getItem("req_subs"))});
-                    context.commit("settypedsubs", {type: "sel_subs", subs: JSON.parse(ss.getItem("sel_subs"))});
-                }
-            }).catch( err => {
-                alert("Fail to load subject list.");
-                // eslint-disable-next-line
-                console.log(err);
-            });
+                    ss.setItem("subs", JSON.stringify(data));
+                    context.commit("setsubs", {subs: data});
+                }).catch( err => {
+                    alert("Fail to load subject list.");
+                    // eslint-disable-next-line
+                    console.log(err);
+                });
+            }  
         }
     },
     getters: {
         get_typed_subs: state=> sub_type=> {return state[sub_type];},
-        get_subs: state => {
-            return state.subs;
+        get_subs: state => { return state.subs; },
+        get_subs_list: state => {
+            let ans = [];
+            for(let sub_code in state.subs)
+            {
+                for(let sub of state.subs[sub_code])
+                {   
+                    ans.push(sub);
+                }
+            }
+            return ans;
         }
     },
     mutations: {
@@ -89,12 +95,14 @@ export const store = new Vuex.Store({
         delsubject: (state, payload) => {
             // payload has this structure
             // {type: "type of subjects, ex) fix_subs, req_subs, sel_subs", code: code of subject, num: class num of subject}
+
             let sub_type = payload.type;
             let code = payload.code;
             let num = payload.num;
             let subs = state[sub_type];
-
-            const idx = subs.findIndex(item => {return item['과목코드'] === code && item['분반'] === num});
+            
+            let tmp = subs;
+            const idx = tmp.findIndex(item => {return item['과목번호'] === code && item['분반'] === num});
             subs.splice(idx,1);
         },
         setsubs: (state, payload) => {
@@ -118,5 +126,12 @@ export const store = new Vuex.Store({
             sessionStorage.req_subs = JSON.stringify(state.req_subs);
             sessionStorage.sel_subs = JSON.stringify(state.sel_subs);
         }
+    },
+    router,
+    state : {
+        subs: {},
+        fix_subs: [],
+        req_subs: (sessionStorage.req_subs ? JSON.stringify(sessionStorage.req_subs) : []),
+        sel_subs: (sessionStorage.sel_subs ? JSON.stringify(sessionStorage.sel_subs) : []),
     },
 });
