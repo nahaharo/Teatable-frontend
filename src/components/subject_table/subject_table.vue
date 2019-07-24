@@ -35,6 +35,7 @@
 import axios from 'axios';
 
 import getColors from "../../tools/colors"
+import config from "../../assets/config.json"
 
 export default {
     data() {return {comb: [], idx: 0}},
@@ -52,7 +53,7 @@ export default {
         for(let s of this.req) { reqsub.push(s["과목번호"]); }
         for(let s of this.sel) { selsub.push(s["과목번호"]); }
 
-        let url ="http://127.0.0.1:5000/comb?"+this.make_query({"fix": fixsub, "req": reqsub, "sel": selsub});
+        let url =config.Comb_URL_prefix+this.make_query({"fix": fixsub, "req": reqsub, "sel": selsub});
 
         axios.post(url).then(
             res => {
