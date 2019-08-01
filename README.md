@@ -1,6 +1,8 @@
 # Teatable Frontend
 ## https://jjuba.me/
 
+Frontend for Teatable service which shows possible time table from given subjects time.
+
 ## Project setup
 ```
 npm install
