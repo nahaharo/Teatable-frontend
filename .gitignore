@@ -2,4 +2,4 @@
 **/*.rs.bk
 .vscode
 cargo.lock
-backend-rust/data
+data
