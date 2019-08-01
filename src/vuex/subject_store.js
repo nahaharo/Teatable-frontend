@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     actions: {
-        init_subs: context => {
+        init_subs: async context => {
             let ss = sessionStorage;
             
             if (ss.fix_subs && ss.req_subs && ss.sel_subs)
@@ -25,7 +25,7 @@ export default new Vuex.Store({
             }
             else
             {
-                axios.get("/response.json").then(res => {//http://127.0.0.1:5000/
+                await axios.get("/response.json").then(res => {//http://127.0.0.1:5000/
                     let head = res.data["head"];
                     let body = res.data["body"];
                     

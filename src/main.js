@@ -12,6 +12,8 @@ import router from './router'
 
 import './assets/css/global.css'
 
+
+
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(VueRouter)

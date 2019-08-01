@@ -104,19 +104,23 @@ export default {
 }
 
 .subject_name {
-   width: 300px;
-}
-
-.subject_code {
-    width: 100px;
+   width: 350px;
 }
 
 .subject_num {
    text-align: left; width:50px;
 }
 
-.subject_prof {
+.subject_code {
     width: 100px;
+}
+
+.subject_time {
+    width: 400px;
+}
+
+.subject_prof {
+    width: 200px;
 }
 
 .subject_prof > div {
@@ -135,7 +139,7 @@ export default {
 
 @media (max-width: 550px) {
     .subject_name {
-        width: 160px;
+        width: 250px;
     }
 }
 

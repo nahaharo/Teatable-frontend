@@ -35,8 +35,12 @@ export default {
     methods: {
         ondrop(ev) {
             ev.preventDefault();
-            let code = ev.dataTransfer.getData("text/code");
-            let num = Number(ev.dataTransfer.getData("text/num"));
+            let data = JSON.parse(ev.dataTransfer.getData("text"));
+            let code = data.code;
+            let num = Number(data.num);
+            
+            // let code = ev.dataTransfer.getData("text/code");
+            // let num = Number(ev.dataTransfer.getData("text/num"));
             this.$store.commit('addsubject', {type: this.type_subs, code: code, num: num});
         },
         allowDrop(ev) {
