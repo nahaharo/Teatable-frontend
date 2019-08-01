@@ -1,4 +1,4 @@
-# Teatable Backend
+# Teatable Frontend
 ## https://jjuba.me/
 
 ## Project setup
