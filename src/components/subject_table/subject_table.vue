@@ -1,11 +1,5 @@
 <template>
     <div>
-        <div class="container-fluid my-5 btn-pannel none-dis-on-print" >
-            <button type="button" class="btn btn-primary" @click="home">Home</button>
-            <button type="button" class="btn btn-light" @click="previous">Previous Table</button>
-            <button type="button" class="btn btn-light" @click="next">Next Table</button>
-            <button type="button" class="btn btn-dark print-btn" onclick="print()">Print</button>
-        </div>
         <table class="subtable">
             <thead>
                 <tr>
@@ -71,6 +65,7 @@ export default {
                 }
                 this.comb = res.data.comb;
                 this.show_table();
+                this.$emit('updated');
             }
         ).catch( err => {
             // eslint-disable-next-line
@@ -78,6 +73,15 @@ export default {
         });
     },
     methods: {
+        get_current_credit() {
+            let subs = this.comb[this.idx];
+            let sum = 0;
+            for(let e of subs.map(x => this.subs[x]))
+            {
+                sum += Number(e.학점);
+            }
+            return sum;
+        },
         make_query(params) {
             let esc = encodeURIComponent;
             return Object.keys(params)
@@ -88,14 +92,13 @@ export default {
             this.idx = (this.idx+1)%this.comb.length;
             this.reset();
             this.show_table();
+            this.$emit('updated');
         },
         previous() {
             this.idx = (this.idx+this.comb.length-1)%this.comb.length;
             this.reset();
             this.show_table();
-        },
-        home() {
-            this.$router.push("/");
+            this.$emit('updated');
         },
         reset() {
             for(let i = 9*60; i<=24*60;)
@@ -156,18 +159,6 @@ export default {
             }
             return subs;
         },
-        keyboard_hdl(e) {
-            if ( e.key == 'a' || e.key == 'ArrowLeft')
-                this.previous();
-            if ( e.key == 'd' || e.key == 'ArrowRight')
-                this.next();
-        },
-    },
-    mounted() {
-        window.addEventListener('keydown', this.keyboard_hdl);
-    },
-    destroyed() {
-        window.removeEventListener('keydown', this.keyboard_hdl);
     },
 }
 </script>
@@ -192,30 +183,5 @@ export default {
 
 .subtable tr {
     border-bottom: 1px solid #ddd;
-}
-
-.print-btn {
-    float: right;
-}
-
-@media (max-width: 600px) {
-    .print-btn {
-       display: none;
-    }
-    .btn-pannel {
-        text-align: center;
-    }
-}
-
-@media (min-width: 600px) {
-    .btn-pannel {
-        width: 70%;
-    }
-}
-
-@media print{
-    .none-dis-on-print{
-        display: none;
-    }
 }
 </style>

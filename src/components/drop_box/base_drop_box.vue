@@ -39,9 +39,13 @@ export default {
             let code = data.code;
             let num = Number(data.num);
             
-            // let code = ev.dataTransfer.getData("text/code");
-            // let num = Number(ev.dataTransfer.getData("text/num"));
-            this.$store.commit('addsubject', {type: this.type_subs, code: code, num: num});
+            let rej_code = new Set(["BS900", "EM900", "ES900", "IC900", "NB900", "RT900", "HL472", "HL303"]);
+            if((this.type_subs=="req_subs"||this.type_subs=="sel_subs") && rej_code.has(code)){
+                alert("Thesis 과목과 UGRP과목은 고정과목에 넣어야 합니다.");
+            }
+            else{
+                this.$store.commit('addsubject', {type: this.type_subs, code: code, num: num});
+            }
         },
         allowDrop(ev) {
             ev.preventDefault();
