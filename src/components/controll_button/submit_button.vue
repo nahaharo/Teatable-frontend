@@ -23,7 +23,13 @@ export default {
                 alert("선택과목의 개수는 10개를 넘길 수 없습니다.");
             }
             else {
-                this.$router.push("/table");
+                let fixsub = [];
+                let reqsub = [];
+                let selsub = [];
+                for(let s of this.fix_subs) { fixsub.push([s["과목번호"], s["분반"]]); }
+                for(let s of this.req_subs) { reqsub.push(s["과목번호"]); }
+                for(let s of this.sel_subs) { selsub.push(s["과목번호"]); }
+                this.$router.push({path:"table", query:{fix: JSON.stringify(fixsub), req: JSON.stringify(reqsub), sel: JSON.stringify(selsub)}});
             }
         }
     },

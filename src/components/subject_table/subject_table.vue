@@ -30,24 +30,31 @@ import axios from 'axios';
 
 import getColors from "../../tools/colors"
 import config from "../../assets/config.json"
+import make_query from "../../tools/make_query"
 
 export default {
     data() {return {comb: [], idx: 0}},
     computed: {
-        fix () {return this.$store.getters.get_typed_subs("fix_subs")},
-        req () {return this.$store.getters.get_typed_subs("req_subs")},
-        sel () {return this.$store.getters.get_typed_subs("sel_subs")},
         subs() {return this.$store.getters.get_subs_list},
     },
     created() {
         let fixsub = [];
         let reqsub = [];
         let selsub = [];
-        for(let s of this.fix) { fixsub.push([s["과목번호"], s["분반"]]); }
-        for(let s of this.req) { reqsub.push(s["과목번호"]); }
-        for(let s of this.sel) { selsub.push(s["과목번호"]); }
+        let id = "";
 
-        let url =config.Comb_URL_prefix+this.make_query({"fix": fixsub, "req": reqsub, "sel": selsub});
+        if(this.$route.query.fix) fixsub = JSON.parse(this.$route.query.fix);
+        if(this.$route.query.req) reqsub = JSON.parse(this.$route.query.req);
+        if(this.$route.query.sel) selsub = JSON.parse(this.$route.query.sel);
+        if(this.$route.query.id)  id     = this.$route.query.id;
+
+        let url;
+        if(id=="")
+        {
+            if(fixsub.length === 0 && reqsub.length === 0 && selsub.length === 0) return;
+            else  url=config.Comb_URL_prefix+make_query({"fix": fixsub, "req": reqsub, "sel": selsub});
+        }
+        else url =config.Comb_URL_prefix+make_query({"id": id});
 
         axios.post(url).then(
             res => {
@@ -64,8 +71,23 @@ export default {
                     return;
                 }
                 this.comb = res.data.comb;
-                this.show_table();
-                this.$emit('updated');
+                if(Object.keys(this.subs).length===0)
+                {
+                    this.$store.dispatch("init_subs").then(
+                        ()=>{
+                                this.show_table();
+                                this.$emit('updated');
+                            }
+                        ).catch(err => {
+                            // eslint-disable-next-line
+                            console.log(err);
+                        });
+                }
+                else
+                {
+                    this.show_table();
+                    this.$emit('updated');
+                }
             }
         ).catch( err => {
             // eslint-disable-next-line
@@ -82,11 +104,8 @@ export default {
             }
             return sum;
         },
-        make_query(params) {
-            let esc = encodeURIComponent;
-            return Object.keys(params)
-            .map(k => esc(k) + '=' + esc(JSON.stringify(params[k])))
-            .join('&');
+        get_current_comb() {
+            return this.comb[this.idx];
         },
         next() {
             this.idx = (this.idx+1)%this.comb.length;

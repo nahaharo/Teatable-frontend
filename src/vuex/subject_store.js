@@ -11,7 +11,7 @@ export default new Vuex.Store({
         init_subs: async context => {
             let ss = sessionStorage;
             
-            if (ss.fix_subs && ss.req_subs && ss.sel_subs)
+            if (ss.getItem("fix_subs") && ss.getItem("req_subs") && ss.getItem("sel_subs"))
             {
                 context.commit("settypedsubs", {type: "fix_subs", subs: JSON.parse(ss.getItem("fix_subs"))});
                 context.commit("settypedsubs", {type: "req_subs", subs: JSON.parse(ss.getItem("req_subs"))});
@@ -131,7 +131,7 @@ export default new Vuex.Store({
     state : {
         subs: {},
         fix_subs: [],
-        req_subs: (sessionStorage.req_subs ? JSON.stringify(sessionStorage.req_subs) : []),
-        sel_subs: (sessionStorage.sel_subs ? JSON.stringify(sessionStorage.sel_subs) : []),
+        req_subs: [],
+        sel_subs: [],
     },
 });

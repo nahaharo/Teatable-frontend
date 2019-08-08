@@ -1,27 +1,37 @@
 <template>
     <div>
-        <div class="container-fluid">
+        <div v-if="this.$route.query.id == null" class="container-fluid">
             <div class="credit none-dis-on-print">학점: {{credits}}</div>
         </div>
         <div class="container-fluid">
-            <div class="my-3 btn-pannel none-dis-on-print" >
+            <div v-if="this.$route.query.id == null" class="my-3 btn-pannel none-dis-on-print" >
                 <button type="button" class="btn btn-primary" @click="home">Home</button>
                 <button type="button" class="btn btn-light" @click="previous">Previous Table</button>
                 <button type="button" class="btn btn-light" @click="next">Next Table</button>
                 <button type="button" class="btn btn-dark print-btn" onclick="print()">Print</button>
+                <button type="button" class="btn btn-secondary share-btn" @click="share">Share</button>
             </div>
         </div>
         <div class="container-fluid">
             <subtable ref="table" v-on:updated="update_credit"></subtable>
         </div>
+        <modal name="hello-world" :width="300" :height="150">
+            <sharemodal :id="id"></sharemodal>
+        </modal>
+        <div v-if="loder" class="lds-dual-ring none-dis-on-print"></div>
     </div>
 </template>
 
 <script>
-import subtable from "../components/subject_table/subject_table"
+import subtable from "../components/subject_table/subject_table";
+import sharemodal from "../components/modal/share_modal";
+import axios from 'axios';
+import config from "../assets/config.json";
+import make_query from "../tools/make_query";
+
 export default {
-    data() {return {credits: 0}},
-    components: {subtable},
+    data() {return {credits: 0, loder: true, id: "", need_id_update: true}},
+    components: {subtable, sharemodal},
     methods: {
         home() {
             this.$router.push("/");
@@ -39,12 +49,39 @@ export default {
                 this.next();
         },
         update_credit() {
+            this.need_id_update = true;
+            this.loder = false;
             this.credits = this.$refs.table.get_current_credit();
+        },
+        share() {
+            this.loder = true;
+            let save_comb = this.$refs.table.get_current_comb();
+            let url =config.Comb_URL_prefix+make_query({"save": JSON.stringify(save_comb)});
+            if (!this.need_id_update)
+            {
+                this.loder = false;
+                this.$modal.show('hello-world');
+                return;
+            }
+            this.need_id_update = false;
+            axios.post(url).then(
+                res => {
+                    if(res.data.s==="f")
+                    {
+                        alert(res.data.msg);
+                        this.loder = false;
+                        return;
+                    }
+                    this.id = res.data.id;
+
+                    this.loder = false;
+                    this.$modal.show('hello-world');
+                }
+            );
         }
     },
     mounted() {
         window.addEventListener('keydown', this.keyboard_hdl);
-
     },
     destroyed() {
         window.removeEventListener('keydown', this.keyboard_hdl);
@@ -57,12 +94,44 @@ export default {
     text-align: center;
 }
 
+.share-btn {
+    float: right;
+}
+
 .print-btn {
     float: right;
 }
 
 .btn-pannel {
     margin: 0 auto;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  position: fixed;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+  width: 100px;
+  height: 100px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 100px;
+  height: 100px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 10px solid #fff;
+  border-color: skyblue transparent skyblue transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 600px) {
