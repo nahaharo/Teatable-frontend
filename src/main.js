@@ -15,6 +15,9 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFacebook } from '@fortawesome/fontawesome-free-brands';
 import { faCopy } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import Vue2TouchEvents from 'vue2-touch-events'
+ 
+
 
 import './assets/css/global.css'
 
@@ -24,6 +27,7 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 Vue.use(VModal);
+Vue.use(Vue2TouchEvents)
 Vue.prototype.$http = axios;
 
 library.add(faFacebook, faCopy)

@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="container-fluid">
-            <subtable ref="table" v-on:updated="update_credit"></subtable>
+            <subtable ref="table" v-on:updated="update_credit" v-touch:swipe.right="previous" v-touch:swipe.left="next" ></subtable>
         </div>
         <modal name="hello-world" :width="300" :height="150">
             <sharemodal :id="id"></sharemodal>
