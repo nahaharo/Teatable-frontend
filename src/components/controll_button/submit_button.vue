@@ -20,7 +20,7 @@ export default {
                 alert("필수과목의 개수는 10개를 넘길 수 없습니다.");
             }
             else if(this.sel_subs.length > 5) {
-                alert("선택과목의 개수는 10개를 넘길 수 없습니다.");
+                alert("선택과목의 개수는 5개를 넘길 수 없습니다.");
             }
             else {
                 let fixsub = [];
