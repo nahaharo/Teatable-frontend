@@ -31,18 +31,18 @@ export default new Vuex.Store({
                     
                     let data = {};
 
-                    for(let sub_code in body)
-                    {
-                        data[sub_code] = [];
-                        for(let sub_array of body[sub_code])
-                        {   
-                            let sub = {};
-                            for(let i=0; i<sub_array.length; i++)
-                            {
-                                sub[head[i]] = sub_array[i];
-                            }
-                            data[sub_code].push(sub);
+                    for(let sub_idx in body)
+                    {   
+                        let sub = body[sub_idx];
+                        if(data[sub[1]]=== undefined) data[sub[1]] = [];
+                        
+                        let sub_dict = {};
+                        for(let col_idx in sub)
+                        {
+                            sub_dict[head[col_idx]] = sub[col_idx];
                         }
+                        sub_dict["분반"]-=1;
+                        data[sub[1]].push(sub_dict);
                     }
                     ss.setItem("subs", JSON.stringify(data));
                     context.commit("setsubs", {subs: data});
