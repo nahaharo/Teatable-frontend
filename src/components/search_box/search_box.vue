@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="search-input"><input v-model="searchquery" placeholder="검색하세요!" @change="search"></div>
+        <div class="search-input"><input type="text" v-model="searchquery" placeholder="검색하세요!" @change="search"></div>
         <div class="scroll-box search-box">
             <table class="mx-auto">
                 <thead>
@@ -101,6 +101,10 @@ export default {
     height:4rem;
     font-size: 13pt;
     border-bottom: 1px solid #ddd;
+}
+
+.subject_row :checked {
+    background-color: blue;
 }
 
 .subject_name {

@@ -1,6 +1,6 @@
 <template>
     <div @click="home">
-        <h1 class="text-center" style="margin:40px;">TeaTable</h1>
+        <h1 class="text-center" style="margin:40px; cursor:pointer;">TeaTable</h1>
     </div>
 </template>
 

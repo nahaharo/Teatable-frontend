@@ -95,7 +95,7 @@ export default {
     top: 90px;
     text-align: center;
     font-size: 20px;
-    color: grey;
+    color: #757575;
 }
 
 </style>
