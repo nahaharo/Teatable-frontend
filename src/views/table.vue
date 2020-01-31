@@ -27,7 +27,6 @@ import subtable from "../components/subject_table/subject_table";
 import sharemodal from "../components/modal/share_modal";
 import axios from 'axios';
 import config from "../assets/config.json";
-import make_query from "../tools/make_query";
 
 export default {
     data() {return {credits: 0, loder: true, id: "", need_id_update: true}},
@@ -55,16 +54,27 @@ export default {
         },
         share() {
             this.loder = true;
-            let save_comb = this.$refs.table.get_current_comb();
-            let url =config.Comb_URL_prefix+make_query({"save": JSON.stringify(save_comb)});
             if (!this.need_id_update)
             {
                 this.loder = false;
                 this.$modal.show('hello-world');
                 return;
             }
+
+            let save_comb = this.$refs.table.get_current_comb();
+
+            let save_config = {
+                method: 'post',
+                url: config.Share_URL,
+                headers: {}, 
+                data: {
+                    save: save_comb
+                }
+            }
+
+
             this.need_id_update = false;
-            axios.post(url).then(
+            axios(save_config).then(
                 res => {
                     if(res.data.s==="f")
                     {

@@ -30,7 +30,6 @@ import axios from 'axios';
 
 import getColors from "../../tools/colors"
 import config from "../../assets/config.json"
-import make_query from "../../tools/make_query"
 
 export default {
     data() {return {comb: [], idx: 0}},
@@ -38,25 +37,42 @@ export default {
         subs() {return this.$store.getters.get_subs_list},
     },
     created() {
-        let fixsub = [];
-        let reqsub = [];
-        let selsub = [];
-        let id = "";
+        let fixsub = this.$store.getters.get_typed_subs("fix_subs");
+        let reqsub = this.$store.getters.get_typed_subs("req_subs");
+        let selsub = this.$store.getters.get_typed_subs("sel_subs");
+        let id = this.$route.query.id;
 
-        if(this.$route.query.fix) fixsub = JSON.parse(this.$route.query.fix);
-        if(this.$route.query.req) reqsub = JSON.parse(this.$route.query.req);
-        if(this.$route.query.sel) selsub = JSON.parse(this.$route.query.sel);
-        if(this.$route.query.id)  id     = this.$route.query.id;
-
-        let url;
-        if(id=="")
+        fixsub = fixsub.map(x => [x["과목번호"], x["분반"]]);
+        reqsub = reqsub.map(x => x["과목번호"]);
+        selsub = selsub.map(x => x["과목번호"]);
+        let req_config;
+        if(!id)
         {
             if(fixsub.length === 0 && reqsub.length === 0 && selsub.length === 0) return;
-            else  url=config.Comb_URL_prefix+make_query({"fix": fixsub, "req": reqsub, "sel": selsub});
+            req_config = {
+                method: 'post',
+                url: config.Comb_URL,
+                headers: {}, 
+                data: {
+                    fix: fixsub,
+                    req: reqsub,
+                    sel: selsub
+                }
+            }
         }
-        else url =config.Comb_URL_prefix+make_query({"id": id});
+        else
+        {
+            req_config = {
+                method: 'post',
+                url: config.Share_URL,
+                headers: {}, 
+                data: {
+                    id: id
+                }
+            }
+        }
 
-        axios.post(url).then(
+        axios(req_config).then(
             res => {
                 if(res.data.s==="f")
                 {

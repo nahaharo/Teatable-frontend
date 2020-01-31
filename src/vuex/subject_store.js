@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 
 import router from '../router'
+import config from "../assets/config.json"
 
 Vue.use(Vuex);
 
@@ -25,7 +26,7 @@ export default new Vuex.Store({
             }
             else
             {
-                await axios.get("/response.json").then(res => {//http://127.0.0.1:5000/
+                await axios.post(config.Data_URL).then(res => {//http://127.0.0.1:5000/
                     let head = res.data["head"];
                     let body = res.data["body"];
                     
