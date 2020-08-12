@@ -1,5 +1,5 @@
 {
-    "Comb_URL":  "http://127.0.0.1:8088/api/comb",
-    "Data_URL": "http://127.0.0.1:8088/api/data",
-    "Share_URL": "http://127.0.0.1:8088/api/share"
+    "Comb_URL":  "/api/comb",
+    "Data_URL": "/api/data",
+    "Share_URL": "/api/share"
 }
