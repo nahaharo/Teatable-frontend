@@ -1,6 +1,6 @@
 {
-    "Comb_URL":  "http://127.0.0.1:8088/comb",
-    "Absolute_Table_URL_prefix": "http://127.0.0.1:8080/table?",
-    "Data_URL": "http://127.0.0.1:8088/data",
-    "Share_URL": "http://127.0.0.1:8088/share"
+    "Comb_URL":  "/api/comb",
+    "Absolute_Table_URL_prefix": "/table?",
+    "Data_URL": "/api/data",
+    "Share_URL": "/api/share"
 }
