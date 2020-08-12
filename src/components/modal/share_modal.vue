@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import config from "../../assets/config.json";
+// import config from "../../assets/config.json";
 import copystr from "../../tools/copyStringToClipboard"
 
 export default {
     computed: {
-        url() {return config.Absolute_Table_URL_prefix + "id=" +escape(this.id);},
+        url() {return location.host + "/table?id=" +escape(this.id);},
     },
     methods: {
         fbshare() {
